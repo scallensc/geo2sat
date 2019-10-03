@@ -41,15 +41,6 @@ class SATELLITE:
         image = requests.get(URL).json()['url']
         return image
 
-'''
-TESTS
-search = input('Please enter an address: ')
-lon, lat = GEOCODE.get(None, search, google_key)
-print(lon, lat)
-image = SATELLITE.get(None, lon, lat, nasa_key)
-print(image)
-'''
-
 @app.route('/')
 def form():
     return render_template('index.html')
@@ -89,3 +80,12 @@ def form_post():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+'''
+TESTS
+search = input('Please enter an address: ')
+lon, lat = GEOCODE.get(None, search, google_key)
+print(lon, lat)
+image = SATELLITE.get(None, lon, lat, nasa_key)
+print(image)
+'''
