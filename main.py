@@ -27,6 +27,11 @@ class GEOCODE:
         lon = requests.get(URL).json()['results'][0]['geometry']['location']['lng']
         lat = requests.get(URL).json()['results'][0]['geometry']['location']['lat']
         return(lon, lat)
+    def check(self, search, google_key):
+        ''' Check for 200 OK '''
+        URL = f'https://maps.googleapis.com/maps/api/geocode/json?address={search}&key={google_key}'
+        check = requests.get(URL)
+        return check
 
 class SATELLITE:
     ''' Retrieve satellite imagery '''
@@ -51,10 +56,36 @@ def form():
 
 @app.route('/', methods=['POST'])
 def form_post():
+    ''' Get address from HTML form '''
+    message = ''
     query = request.form['text']
-    lon, lat = GEOCODE.get(None, query, google_key)
-    image = SATELLITE.get(None, lon, lat, nasa_key)
-    return '<img src=' + image + '>'
+
+    # check for active internet connection
+    if query:
+        try:
+            GEOCODE.check(None, query, google_key)
+        except requests.ConnectionError:
+            message = "No internet connection!"
+            return render_template('index.html', message=message)
+
+    check = GEOCODE.check(None, query, google_key)
+    # check for a valid 200 OK return code
+    if check.status_code == 200:
+        try:
+            lon, lat = GEOCODE.get(None, query, google_key)
+        except IndexError:
+            # index error only appears to be raised if an invalid address
+            # which cannot be found has been entered
+            message = 'Invalid input, please try again!'
+            return render_template('index.html', message=message)
+        # return satellite image with formatted address for display on html page
+        image = SATELLITE.get(None, lon, lat, nasa_key)
+        message = GEOCODE.check(None, query, google_key).json()['results'][0]['formatted_address']
+        return render_template('index.html', image=image, message=message)
+    else:
+        # return error message for a blank input
+        message = 'Nothing Entered, please try again!'
+        return render_template('index.html', message=message)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
