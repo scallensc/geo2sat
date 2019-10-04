@@ -27,6 +27,7 @@ class GEOCODE:
         lon = requests.get(URL).json()['results'][0]['geometry']['location']['lng']
         lat = requests.get(URL).json()['results'][0]['geometry']['location']['lat']
         return(lon, lat)
+
     def check(self, search, google_key):
         ''' Check for 200 OK '''
         URL = f'https://maps.googleapis.com/maps/api/geocode/json?address={search}&key={google_key}'
