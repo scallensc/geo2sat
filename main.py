@@ -6,7 +6,7 @@ app = Flask(__name__)
 class API_KEY:
     ''' Retrieve API keys from file '''
     def get(self):
-        ''' Load API keys or display error if file not found'''
+        ''' Load API keys or display error if file not found '''
         try:
             with open('apikeys.yaml', 'r') as config_file:
                 config = yaml.load(config_file)
@@ -22,7 +22,7 @@ class GEOCODE:
         self.response = requests.get(self.URL)
 
     def loc(self, search):
-        ''' Retreieve longitude/latitude from geocode information '''
+        ''' Extract longitude/latitude from geocode information '''
         lon = self.response.json()['results'][0]['geometry']['location']['lng']
         lat = self.response.json()['results'][0]['geometry']['location']['lat']
         return(lon, lat)
@@ -30,6 +30,10 @@ class GEOCODE:
     def check(self, search):
         ''' Check for 200 OK '''
         return self.response
+    
+    def address(self, search):
+        ''' Extract formatted address '''
+        return self.response.json()['results'][0]['formatted_address']
 
 class SATELLITE:
     ''' Request satellite image object from NASA API '''
@@ -71,10 +75,12 @@ def form_post():
             # which cannot be found has been entered
             message = 'Invalid input, please try again!'
             return render_template('index.html', message=message)
-        # return satellite image with formatted address for display on html page
-        image_url = SATELLITE(lon, lat)
-        image = image_url.pic()
-        message = geocode.check(query).json()['results'][0]['formatted_address']
+        
+        # retrieve formatted address to display as message
+        # along with satellite image to render on html page
+        message = geocode.address(query)
+        image = SATELLITE(lon, lat).pic()
+
         return render_template('index.html', image=image, message=message)
 
     # return error message for a blank input
