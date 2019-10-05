@@ -2,7 +2,6 @@ import requests
 from flask import Flask, render_template, request
 from geocode import GEOCODE
 from satellite import SATELLITE
-from api_key import API_KEY
 import yaml
 
 app = Flask(__name__)
@@ -44,8 +43,8 @@ def form_post():
         # here is due to an issue with the NASA API itself
         try:
             image = SATELLITE(lon, lat).pic()
-        except Exception as e:
-            message = e
+        except Exception:
+            message = "Error communicating with NASA API, please try again!"
             return render_template('index.html', message=message)
 
         return render_template('index.html', image=image, message=message)
