@@ -1,5 +1,6 @@
 import yaml
 
+
 class API_KEY:
     ''' Retrieve API keys from file '''
     def get(self):

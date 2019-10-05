@@ -1,6 +1,7 @@
 import requests
 from api_key import API_KEY
 
+
 class GEOCODE:
     ''' Retrieve geocode for a given address '''
     def __init__(self, search):
@@ -17,7 +18,7 @@ class GEOCODE:
     def check(self):
         ''' Check for requests response code '''
         return self.response
-    
+
     def address(self):
         ''' Extract formatted address '''
         return self.response.json()['results'][0]['formatted_address']
