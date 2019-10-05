@@ -15,7 +15,7 @@ class GEOCODE:
         return(lon, lat)
 
     def check(self):
-        ''' Check for 200 OK '''
+        ''' Check for requests response code '''
         return self.response
     
     def address(self):
