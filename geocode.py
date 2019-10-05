@@ -6,7 +6,7 @@ class GEOCODE:
     ''' Retrieve geocode for a given address '''
     def __init__(self, search):
         self.search = search
-        self.URL = f'https://maps.googleapis.com/maps/api/geocode/json?address={search}&key={API_KEY.get("google")}'
+        self.URL = f'https://maps.googleapis.com/maps/api/geocode/json?address={search}&key={API_KEY.get("google")}'  # noqa: E501
         self.response = requests.get(self.URL)
 
     def loc(self):
