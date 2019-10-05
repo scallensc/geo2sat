@@ -26,9 +26,9 @@ def form_post():
             return render_template('index.html', message=message)
 
     # check for a valid 200 OK return code
-    if geocode.check(query).status_code == 200:
+    if geocode.check().status_code == 200:
         try:
-            lon, lat = geocode.loc(query)
+            lon, lat = geocode.loc()
         except IndexError:
             # index error only appears to be raised if an invalid address
             # which cannot be found has been entered
@@ -36,7 +36,7 @@ def form_post():
             return render_template('index.html', message=message)
         
         # retrieve formatted address to display as message
-        message = geocode.address(query)
+        message = geocode.address()
         
         # check for active internet connection for second API call
         try:
