@@ -1,3 +1,7 @@
+'''
+Geocode to satellite image
+Flask application
+'''
 import requests
 from flask import Flask, render_template, request
 from geocode import GEOCODE
