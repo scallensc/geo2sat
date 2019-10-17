@@ -1,12 +1,16 @@
 import requests
-from api_key import API_KEY
+from dotenv import load_dotenv
+import os
+load_dotenv()
+
+GOOGLE_KEY = os.getenv("google")
 
 
 class GEOCODE:
     ''' Retrieve geocode for a given address '''
     def __init__(self, search):
         self.search = search
-        self.URL = f'https://maps.googleapis.com/maps/api/geocode/json?address={search}&key={API_KEY.get("google")}'  # noqa: E501
+        self.URL = f'https://maps.googleapis.com/maps/api/geocode/json?address={search}&key={GOOGLE_KEY}'  # noqa: E501
         self.response = requests.get(self.URL)
 
     def loc(self):
