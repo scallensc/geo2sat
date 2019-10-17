@@ -4,8 +4,8 @@ Flask application
 '''
 import requests
 from flask import Flask, render_template, request
-from geocode import GEOCODE
-from satellite import SATELLITE
+from .geocode import GEOCODE
+from .satellite import SATELLITE
 
 
 app = Flask(__name__)
