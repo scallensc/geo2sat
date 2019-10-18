@@ -1,42 +1,25 @@
-# Python CircleCI 2.0 configuration file
 version: 2
 jobs:
   build:
-
-    branches:
-      only: master
-
+    ...
+  deploy:
     docker:
-      - image: circleci/python:3.7
-
-    working_directory: ~/repo
-
+      - image: buildpack-deps:trusty
     steps:
-
-      # Step 1: Checkout the code from Github
       - checkout
-
-      # Step 2: create virtual env and install dependencies
-      - run:
-          name: install dependencies
-          command: |
-            python3 -m venv venv
-            . venv/bin/activate
-            pip install -r requirements.txt
-
       - run:
           name: Deploy Master to Heroku
           command: |
             git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git master
-      # Step 3: PWD
-      - run:
-          name: Print working dir and Directory Contents
-          command: |
-            pwd && ls -a
 
-      # Step 4: run linter and tests
-      - run:
-          name: run tests
-          command: |
-            . venv/bin/activate
-            flake8 --exclude=venv* --statistics
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
